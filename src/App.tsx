@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { act, use, useEffect, useState } from "react";
 import StoryList from "./modules/story-list/StoryList";
 import { UserStory } from "./types";
+import StoryViewer from "./modules/StoryViewer";
 
 function App() {
   const [userStories, setUserStories] = useState<UserStory[]>([]);
+  const [activeUserStoryIdx, setActiveUserStoryIdx] = useState<number>(-1);
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -14,9 +16,39 @@ function App() {
     fetchStories();
   }, []);
 
+  const handleStoryClick = (idx: number) => {
+    setActiveUserStoryIdx(idx);
+  };
+
+  const handleNextUser = () => {
+    if (activeUserStoryIdx === userStories.length) {
+      // close the story viewer if the last user is reached
+    } else {
+      setActiveUserStoryIdx(activeUserStoryIdx + 1);
+    }
+  };
+
+  const handlePrevUser = () => {
+    if (activeUserStoryIdx === 0) {
+      // close the story viewer if the first user is reached
+    } else {
+      setActiveUserStoryIdx(activeUserStoryIdx - 1);
+    }
+  }
+
   return (
     <div>
-      <StoryList userStories={userStories} />
+      <StoryList
+        userStories={userStories}
+        handleStoryClick={handleStoryClick}
+      />
+      {activeUserStoryIdx !== -1 && (
+        <StoryViewer
+          activeUser={userStories[activeUserStoryIdx]}
+          onNextUser={handleNextUser}
+          onPrevUser={handlePrevUser}
+        />
+      )}
     </div>
   );
 }
