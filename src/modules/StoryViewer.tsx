@@ -36,7 +36,21 @@ const StoryViewer = (props: StoryViewerProps) => {
     }
     setImageLoading(true);
     setTimerProgress(0); // Reset progress for next story
-  }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser])
+  }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser]);
+
+  function formatTimeStamp(timestamp: string): string {
+    const now = Date.now();
+    const diffMs = now - new Date(timestamp).getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHr / 24);
+
+    if (diffSec < 60) return `${diffSec}s`;
+    if (diffMin < 60) return `${diffMin}m`;
+    if (diffHr < 24) return `${diffHr}h`;
+    return `${diffDay}d`;
+  }
 
   useEffect(() => {
     const startTime = Date.now();
@@ -62,8 +76,8 @@ const StoryViewer = (props: StoryViewerProps) => {
     <div className="fixed top-0 left-0 w-full h-full bg-black z-[1000] flex flex-col items-center justify-center">
       <div className='relative w-full h-full max-w-[600px]'>
         <div className='absolute top-[5px] left-[15px] right-[15px] flex gap-1 h-[3px]'>
-          {activeUser.data.map((_, index) => (
-            <div className='grow bg-white/30'>
+          {activeUser.data.map((images, index) => (
+            <div key={images.image} className='grow bg-white/30'>
               <div
                 style={{ width: index === currStoryIdx ? `${timerProgress}%` : index < currStoryIdx ? "100%" : '0' }}
                 className='h-full bg-white' />
@@ -77,6 +91,7 @@ const StoryViewer = (props: StoryViewerProps) => {
             className='w-[40px] h-[40px] rounded-full'
           />
           <span className='text-white font-bold'>{activeUser.username}</span>
+          <span className='text-white'>{formatTimeStamp(activeUser.data[currStoryIdx].timestamp)}</span>
         </div>
         <button
           type="button"
@@ -89,7 +104,7 @@ const StoryViewer = (props: StoryViewerProps) => {
           </div>
         )}
         <img
-          src={activeUser.data[currStoryIdx]}
+          src={activeUser.data[currStoryIdx].image}
           alt={`${activeUser.username}-${currStoryIdx}`}
           className={`h-full object-cover ${imageLoading ? 'hidden' : 'block'}`}
           onLoad={() => setImageLoading(false)}

@@ -1,114 +1,74 @@
 [
   {
-    "username": "Bhavay",
-    "profilePic": "/images/bhavay-profile.jpeg",
+    "id": "user-1",
+    "username": "Ashley",
+    "profilePic": "https://i.pravatar.cc/150?u=user1",
     "data": [
-      "/images/wity.jpeg",
-      "/images/netflix.jpeg",
-      "/images/vacation.jpeg"
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story1/1080/1920" },
+      { "timestamp": "2025-05-24T15:27:19.191Z", "image": "https://picsum.photos/seed/story20/1080/1920" },
+      { "timestamp": "2025-05-24T16:27:19.191Z", "image": "https://picsum.photos/seed/story3/1080/1920" }
     ]
   },
   {
-    "username": "Prashant",
-    "profilePic": "/images/prashant-profile.jpeg",
+    "id": "user-2",
+    "username": "Elizabeth",
+    "profilePic": "https://i.pravatar.cc/150?u=user3",
     "data": [
-      "/images/summer-rain.jpeg",
-      "/images/study-mood.jpeg",
-      "/images/summer-time.jpeg",
-      "/images/sunset.jpeg"
+      { "timestamp": "2025-05-24T15:30:19.191Z", "image": "https://picsum.photos/seed/story4/1080/1920" },
+      { "timestamp": "2025-05-24T15:30:19.191Z", "image": "https://picsum.photos/seed/story6/1080/1920" }
     ]
   },
   {
-    "username": "Wasan",
-    "profilePic": "/images/wasan-profile.jpeg",
+    "id": "user-3",
+    "username": "Drake",
+    "profilePic": "https://i.pravatar.cc/150?u=user4",
     "data": [
-      "/images/starbucks.jpeg",
-      "/images/friyay.jpeg",
-      "/images/danish-breakfast.jpeg"
+      { "timestamp": "2025-05-24T20:24:19.191Z", "image": "https://picsum.photos/seed/story7/1080/1920" },
+      { "timestamp": "2025-05-24T20:24:19.191Z", "image": "https://picsum.photos/seed/story8/1080/1920" },
+      { "timestamp": "2025-05-24T20:24:19.191Z", "image": "https://picsum.photos/seed/story9/1080/1920" }
     ]
   },
   {
-    "username": "Bhavay",
-    "profilePic": "/images/bhavay-profile.jpeg",
+    "id": "user-4",
+    "username": "Arijit",
+    "profilePic": "https://i.pravatar.cc/150?u=user7",
     "data": [
-      "/images/wity.jpeg",
-      "/images/netflix.jpeg",
-      "/images/vacation.jpeg"
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story10/1080/1920" },
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story12/1080/1920" }
     ]
   },
   {
-    "username": "Prashant",
-    "profilePic": "/images/prashant-profile.jpeg",
+    "id": "user-5",
+    "username": "Nishant",
+    "profilePic": "https://i.pravatar.cc/150?u=user8",
     "data": [
-      "/images/summer-rain.jpeg",
-      "/images/study-mood.jpeg",
-      "/images/summer-time.jpeg",
-      "/images/sunset.jpeg"
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story13/1080/1920" }
     ]
   },
   {
-    "username": "Wasan",
-    "profilePic": "/images/wasan-profile.jpeg",
+    "id": "user-6",
+    "username": "Ayesha",
+    "profilePic": "https://i.pravatar.cc/150?u=user9",
     "data": [
-      "/images/starbucks.jpeg",
-      "/images/friyay.jpeg",
-      "/images/danish-breakfast.jpeg"
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story14/1080/1920" }
     ]
   },
   {
-    "username": "Bhavay",
-    "profilePic": "/images/bhavay-profile.jpeg",
+    "id": "user-7",
+    "username": "Janhvi",
+    "profilePic": "https://i.pravatar.cc/150?u=user10",
     "data": [
-      "/images/wity.jpeg",
-      "/images/netflix.jpeg",
-      "/images/vacation.jpeg"
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story15/1080/1920" },
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story16/1080/1920" }
     ]
   },
   {
-    "username": "Prashant",
-    "profilePic": "/images/prashant-profile.jpeg",
+    "id": "user-8",
+    "username": "Simran",
+    "profilePic": "https://i.pravatar.cc/150?u=user11",
     "data": [
-      "/images/summer-rain.jpeg",
-      "/images/study-mood.jpeg",
-      "/images/summer-time.jpeg",
-      "/images/sunset.jpeg"
-    ]
-  },
-  {
-    "username": "Wasan",
-    "profilePic": "/images/wasan-profile.jpeg",
-    "data": [
-      "/images/starbucks.jpeg",
-      "/images/friyay.jpeg",
-      "/images/danish-breakfast.jpeg"
-    ]
-  },
-  {
-    "username": "Bhavay",
-    "profilePic": "/images/bhavay-profile.jpeg",
-    "data": [
-      "/images/wity.jpeg",
-      "/images/netflix.jpeg",
-      "/images/vacation.jpeg"
-    ]
-  },
-  {
-    "username": "Prashant",
-    "profilePic": "/images/prashant-profile.jpeg",
-    "data": [
-      "/images/summer-rain.jpeg",
-      "/images/study-mood.jpeg",
-      "/images/summer-time.jpeg",
-      "/images/sunset.jpeg"
-    ]
-  },
-  {
-    "username": "Wasan",
-    "profilePic": "/images/wasan-profile.jpeg",
-    "data": [
-      "/images/starbucks.jpeg",
-      "/images/friyay.jpeg",
-      "/images/danish-breakfast.jpeg"
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story17/1080/1920" },
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story18/1080/1920" }
     ]
   }
 ]

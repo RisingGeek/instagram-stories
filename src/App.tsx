@@ -21,8 +21,9 @@ function App() {
   };
 
   const handleNextUser = () => {
-    if (activeUserStoryIdx === userStories.length) {
+    if (activeUserStoryIdx === userStories.length - 1) {
       // close the story viewer if the last user is reached
+      setActiveUserStoryIdx(-1);
     } else {
       setActiveUserStoryIdx(activeUserStoryIdx + 1);
     }
@@ -31,6 +32,7 @@ function App() {
   const handlePrevUser = () => {
     if (activeUserStoryIdx === 0) {
       // close the story viewer if the first user is reached
+      setActiveUserStoryIdx(-1);
     } else {
       setActiveUserStoryIdx(activeUserStoryIdx - 1);
     }
