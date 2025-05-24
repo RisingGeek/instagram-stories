@@ -11,6 +11,7 @@ const StoryViewer = (props: StoryViewerProps) => {
   const { activeUser, onNextUser, onPrevUser, onClose } = props;
   const [currStoryIdx, setCurrentStoryIdx] = React.useState<number>(0);
   const [timerProgress, setTimerProgress] = React.useState<number>(0); // 0-100%
+  const [imageLoading, setImageLoading] = React.useState<boolean>(true);
 
   const handleStoryAction = useCallback((direction: 'next' | 'prev') => {
     if (direction === 'next') {
@@ -33,30 +34,25 @@ const StoryViewer = (props: StoryViewerProps) => {
         setCurrentStoryIdx(lastImgIdx);
       }
     }
+    setImageLoading(true);
   }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser])
 
   useEffect(() => {
     const startTime = Date.now();
+    const storyDuration = 5000; // 5 seconds per story
     const interval = setInterval(() => {
       const diffTime = Date.now() - startTime;
-      const storyDuration = 5000; // 5 seconds per story
       if (diffTime >= storyDuration) {
+        // Load next story
         handleStoryAction('next');
       } else {
+        // Update timer progress
         setTimerProgress(Math.trunc((diffTime / storyDuration) * 100));
       }
     }, 50);
 
     return () => clearInterval(interval);
   }, [handleStoryAction]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log("5 seconds")
-    }, 5000)
-
-    return () => clearInterval(interval);
-  }, [])
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black z-[1000] flex flex-col items-center justify-center">
@@ -83,10 +79,16 @@ const StoryViewer = (props: StoryViewerProps) => {
           className='absolute top-[15px] right-[15px] text-white text-3xl z-[1002]'
           onClick={onClose}
         >&times;</button>
+        {imageLoading && (
+          <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
+            <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+          </div>
+        )}
         <img
           src={activeUser.data[currStoryIdx]}
           alt={`${activeUser.username}-${currStoryIdx}`}
-          className='h-full object-cover'
+          className={`h-full object-cover ${imageLoading ? 'hidden' : 'block'}`}
+          onLoad={() => setImageLoading(false)}
         />
         <button
           type='button'
