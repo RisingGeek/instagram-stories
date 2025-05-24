@@ -16,6 +16,8 @@ const StoryViewer = (props: StoryViewerProps) => {
   const [timerProgress, setTimerProgress] = React.useState<number>(0); // 0-100%
   const [imageLoading, setImageLoading] = React.useState<boolean>(true);
   const [isPaused, setIsPaused] = React.useState<boolean>(false);
+  const [isTransitioning, setIsTransitioning] = React.useState<boolean>(false);
+  const [slideDirection, setSlideDirection] = React.useState<'left' | 'right' | null>(null);
   const holdTriggeredRef = useRef<boolean>(false);
 
   const handleStoryAction = useCallback((direction: 'next' | 'prev') => {
@@ -28,24 +30,38 @@ const StoryViewer = (props: StoryViewerProps) => {
         setCurrentStoryIdx(currStoryIdx + 1);
       } else {
         // Move to next user
-        onNextUser();
-        // Reset to first story of the next user
-        setCurrentStoryIdx(0);
+        setSlideDirection('left');
+        setIsTransitioning(true);
+        setTimeout(() => {
+          onNextUser();
+          // Reset to first story of the next user
+          setCurrentStoryIdx(0);
+          setIsTransitioning(false);
+          setSlideDirection(null);
+        }, 300);
       }
     } else {
       if (currStoryIdx > 0) {
         setCurrentStoryIdx(currStoryIdx - 1);
       } else {
         // Move to previous user
-        onPrevUser();
-        if (prevUser) {
-          setCurrentStoryIdx(prevUser.data.length - 1);
-        }
+        setSlideDirection('right');
+        setIsTransitioning(true);
+        setTimeout(() => {
+          onPrevUser();
+          if (prevUser) {
+            setCurrentStoryIdx(prevUser.data.length - 1);
+          }
+          setIsTransitioning(false);
+          setSlideDirection(null);
+        }, 300);
       }
     }
-    setImageLoading(true);
-    setTimerProgress(0); // Reset progress for next story
-  }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser]);
+    if (!isTransitioning) {
+      setImageLoading(true);
+      setTimerProgress(0); // Reset progress for next story
+    }
+  }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser, prevUser, isTransitioning]);
 
   const formatTimeStamp = (timestamp: string): string => {
     const now = Date.now();
@@ -62,7 +78,6 @@ const StoryViewer = (props: StoryViewerProps) => {
   }
 
   const handlePauseTimer = () => {
-    console.log("pause")
     setIsPaused(true);
     holdTriggeredRef.current = false;
     setTimeout(() => {
@@ -71,7 +86,6 @@ const StoryViewer = (props: StoryViewerProps) => {
   };
 
   const handleResumeTimer = () => {
-    console.log("resume")
     setIsPaused(false);
   }
 
@@ -98,14 +112,19 @@ const StoryViewer = (props: StoryViewerProps) => {
     return () => clearInterval(interval);
   }, [handleStoryAction, imageLoading, isPaused]);
 
+  const getTransformClass = () => {
+    if (!isTransitioning || !slideDirection) return '';
+    return slideDirection === 'left' ? '-translate-x-full' : 'translate-x-full';
+  };
+
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black z-[1000] flex flex-col items-center justify-center">
       <div 
-      className='relative w-full h-full max-w-[600px]' 
-      onMouseDown={handlePauseTimer} 
-      onMouseUp={handleResumeTimer}
-      onTouchStart={handlePauseTimer}
-      onTouchEnd={handleResumeTimer}
+        className={`relative w-full h-full max-w-[600px] transition-transform duration-300 ease-in-out ${getTransformClass()}`}
+        onMouseDown={handlePauseTimer} 
+        onMouseUp={handleResumeTimer}
+        onTouchStart={handlePauseTimer}
+        onTouchEnd={handleResumeTimer}
       >
         <div className='absolute top-[5px] left-[15px] right-[15px] flex gap-1 h-[3px]'>
           {activeUser.data.map((images, index) => (
