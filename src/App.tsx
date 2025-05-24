@@ -36,6 +36,10 @@ function App() {
     }
   }
 
+  const handleClose = () => {
+    setActiveUserStoryIdx(-1);
+  }
+
   return (
     <div>
       <StoryList
@@ -47,6 +51,7 @@ function App() {
           activeUser={userStories[activeUserStoryIdx]}
           onNextUser={handleNextUser}
           onPrevUser={handlePrevUser}
+          onClose={handleClose}
         />
       )}
     </div>
