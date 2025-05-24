@@ -35,6 +35,7 @@ const StoryViewer = (props: StoryViewerProps) => {
       }
     }
     setImageLoading(true);
+    setTimerProgress(0); // Reset progress for next story
   }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser])
 
   useEffect(() => {
@@ -50,9 +51,12 @@ const StoryViewer = (props: StoryViewerProps) => {
         setTimerProgress(Math.trunc((diffTime / storyDuration) * 100));
       }
     }, 50);
+    if (imageLoading) {
+      clearInterval(interval);
+    }
 
     return () => clearInterval(interval);
-  }, [handleStoryAction]);
+  }, [handleStoryAction, imageLoading]);
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black z-[1000] flex flex-col items-center justify-center">
