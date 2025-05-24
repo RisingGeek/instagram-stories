@@ -1,19 +1,28 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { UserStory } from '../types';
 
 interface StoryViewerProps {
   activeUser: UserStory;
+  prevUser: UserStory | null;
   onNextUser: () => void;
   onPrevUser: () => void;
   onClose: () => void;
 }
+const HOLD_THRESHOLD = 500; // 500ms to trigger hold action
+
 const StoryViewer = (props: StoryViewerProps) => {
-  const { activeUser, onNextUser, onPrevUser, onClose } = props;
+  const { activeUser, prevUser, onNextUser, onPrevUser, onClose } = props;
   const [currStoryIdx, setCurrentStoryIdx] = React.useState<number>(0);
   const [timerProgress, setTimerProgress] = React.useState<number>(0); // 0-100%
   const [imageLoading, setImageLoading] = React.useState<boolean>(true);
+  const [isPaused, setIsPaused] = React.useState<boolean>(false);
+  const holdTriggeredRef = useRef<boolean>(false);
 
   const handleStoryAction = useCallback((direction: 'next' | 'prev') => {
+    if (holdTriggeredRef.current) {
+      holdTriggeredRef.current = false;
+      return;
+    }
     if (direction === 'next') {
       if (currStoryIdx < activeUser.data.length - 1) {
         setCurrentStoryIdx(currStoryIdx + 1);
@@ -27,18 +36,18 @@ const StoryViewer = (props: StoryViewerProps) => {
       if (currStoryIdx > 0) {
         setCurrentStoryIdx(currStoryIdx - 1);
       } else {
-        const lastImgIdx = activeUser.data.length - 1;
         // Move to previous user
         onPrevUser();
-        // Reset to last story of the previous user
-        setCurrentStoryIdx(lastImgIdx);
+        if (prevUser) {
+          setCurrentStoryIdx(prevUser.data.length - 1);
+        }
       }
     }
     setImageLoading(true);
     setTimerProgress(0); // Reset progress for next story
   }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser]);
 
-  function formatTimeStamp(timestamp: string): string {
+  const formatTimeStamp = (timestamp: string): string => {
     const now = Date.now();
     const diffMs = now - new Date(timestamp).getTime();
     const diffSec = Math.floor(diffMs / 1000);
@@ -52,17 +61,34 @@ const StoryViewer = (props: StoryViewerProps) => {
     return `${diffDay}d`;
   }
 
+  const handlePauseTimer = () => {
+    console.log("pause")
+    setIsPaused(true);
+    holdTriggeredRef.current = false;
+    setTimeout(() => {
+      holdTriggeredRef.current = true;
+    }, HOLD_THRESHOLD);
+  };
+
+  const handleResumeTimer = () => {
+    console.log("resume")
+    setIsPaused(false);
+  }
+
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
     const startTime = Date.now();
     const storyDuration = 5000; // 5 seconds per story
     const interval = setInterval(() => {
-      const diffTime = Date.now() - startTime;
+      const diffTime = (timerProgress / 100) * storyDuration + Date.now() - startTime;
       if (diffTime >= storyDuration) {
         // Load next story
         handleStoryAction('next');
       } else {
         // Update timer progress
-        setTimerProgress(Math.trunc((diffTime / storyDuration) * 100));
+        setTimerProgress((diffTime / storyDuration) * 100);
       }
     }, 50);
     if (imageLoading) {
@@ -70,11 +96,17 @@ const StoryViewer = (props: StoryViewerProps) => {
     }
 
     return () => clearInterval(interval);
-  }, [handleStoryAction, imageLoading]);
+  }, [handleStoryAction, imageLoading, isPaused]);
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black z-[1000] flex flex-col items-center justify-center">
-      <div className='relative w-full h-full max-w-[600px]'>
+      <div 
+      className='relative w-full h-full max-w-[600px]' 
+      onMouseDown={handlePauseTimer} 
+      onMouseUp={handleResumeTimer}
+      onTouchStart={handlePauseTimer}
+      onTouchEnd={handleResumeTimer}
+      >
         <div className='absolute top-[5px] left-[15px] right-[15px] flex gap-1 h-[3px]'>
           {activeUser.data.map((images, index) => (
             <div key={images.image} className='grow bg-white/30'>
@@ -106,7 +138,7 @@ const StoryViewer = (props: StoryViewerProps) => {
         <img
           src={activeUser.data[currStoryIdx].image}
           alt={`${activeUser.username}-${currStoryIdx}`}
-          className={`h-full object-cover ${imageLoading ? 'hidden' : 'block'}`}
+          className={`w-full h-full object-cover ${imageLoading ? 'hidden' : 'block'}`}
           onLoad={() => setImageLoading(false)}
         />
         <button
