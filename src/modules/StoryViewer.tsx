@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { UserStory } from '../types';
+import StoryProgress from './StoryProgress';
+import StoryHeader from './StoryHeader';
+import ImageLoader from './ImageLoader';
+import ActionButtons from './ActionButtons';
 
 interface StoryViewerProps {
   activeUser: UserStory;
@@ -98,20 +102,6 @@ const StoryViewer = (props: StoryViewerProps) => {
     setTimerProgress(0);
   }
 
-  const formatTimeStamp = (timestamp: string): string => {
-    const now = Date.now();
-    const diffMs = now - new Date(timestamp).getTime();
-    const diffSec = Math.floor(diffMs / 1000);
-    const diffMin = Math.floor(diffSec / 60);
-    const diffHr = Math.floor(diffMin / 60);
-    const diffDay = Math.floor(diffHr / 24);
-
-    if (diffSec < 60) return `${diffSec}s`;
-    if (diffMin < 60) return `${diffMin}m`;
-    if (diffHr < 24) return `${diffHr}h`;
-    return `${diffDay}d`;
-  }
-
   const handlePauseTimer = () => {
     setIsPaused(true);
     holdTriggeredRef.current = false;
@@ -184,7 +174,7 @@ const StoryViewer = (props: StoryViewerProps) => {
     }
 
     return () => clearInterval(interval);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleStoryAction, imageLoading, isPaused]);
 
   useEffect(() => {
@@ -210,40 +200,17 @@ const StoryViewer = (props: StoryViewerProps) => {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className='absolute top-[5px] left-[15px] right-[15px] flex gap-1 h-[3px]'>
-          {activeUser.data.map((images, index) => (
-            <div key={images.image} className='grow bg-white/30'>
-              <div
-                style={{ width: index === currStoryIdx ? `${timerProgress}%` : index < currStoryIdx ? "100%" : '0' }}
-                className='h-full bg-white'
-                data-testid={`story-viewer-progress-${index}`}
-              />
-            </div>
-          ))}
-        </div>
-        <div className='absolute top-[15px] left-[15px] flex items-center gap-2 z-[1000]'>
-          <img
-            src={activeUser.profilePic}
-            alt={activeUser.username}
-            className='w-[40px] h-[40px] rounded-full'
-          />
-          <span className='text-white font-bold' data-testid="story-viewer-username">{activeUser.username}</span>
-          <span className='text-white'>{formatTimeStamp(activeUser.data[currStoryIdx].timestamp)}</span>
-        </div>
-        <button
-          type="button"
-          className='absolute top-[15px] right-[15px] text-white text-3xl z-[1002]'
-          onClick={onClose}
-          data-testid='close-story-viewer'
-        >&times;</button>
-        {imageLoading && (
-          <div
-            className='absolute inset-0 flex items-center justify-center bg-black/50 z-[1002]'
-            data-testid='story-viewer-loader'
-          >
-            <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
-          </div>
-        )}
+        <StoryProgress
+          progressBarCount={activeUser.data.length}
+          currStoryIdx={currStoryIdx}
+          timerProgress={timerProgress}
+        />
+        <StoryHeader
+          activeUser={activeUser}
+          currStoryIdx={currStoryIdx}
+          onClose={onClose}
+        />
+        {imageLoading && <ImageLoader />}
         <img
           src={activeUser.data[currStoryIdx].image}
           alt={`${activeUser.username}-${currStoryIdx}`}
@@ -251,18 +218,7 @@ const StoryViewer = (props: StoryViewerProps) => {
           data-testid='story-viewer-image'
           onLoad={() => setImageLoading(false)}
         />
-        <button
-          type='button'
-          className='absolute top-0 bottom-0 w-1/2'
-          onClick={() => handleStoryAction('prev')}
-          data-testid='story-viewer-nav-prev'
-        />
-        <button
-          type='button'
-          className='absolute top-0 bottom-0 right-0 w-1/2'
-          onClick={() => handleStoryAction('next')}
-          data-testid='story-viewer-nav-next'
-        />
+        <ActionButtons handleStoryAction={handleStoryAction} />
 
       </div>
     </div>
