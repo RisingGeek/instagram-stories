@@ -29,11 +29,13 @@ const StoryViewer = (props: StoryViewerProps) => {
       swipeTriggeredRef.current = false;
       return;
     }
+    let isUserChange = false;
     if (direction === 'next') {
       if (currStoryIdx < activeUser.data.length - 1) {
         setCurrentStoryIdx(currStoryIdx + 1);
       } else {
         // Move to next user
+        isUserChange = true;
         setSlideDirection('left');
         setIsTransitioning(true);
         setTimeout(() => {
@@ -49,12 +51,13 @@ const StoryViewer = (props: StoryViewerProps) => {
         setCurrentStoryIdx(currStoryIdx - 1);
       } else {
         // Move to previous user
+        isUserChange = true;
         setSlideDirection('right');
         setIsTransitioning(true);
         setTimeout(() => {
           onPrevUser();
           if (prevUser) {
-            setCurrentStoryIdx(prevUser.data.length - 1);
+            setCurrentStoryIdx(0);
           }
           setIsTransitioning(false);
           setSlideDirection(null);
@@ -62,7 +65,7 @@ const StoryViewer = (props: StoryViewerProps) => {
       }
     }
     if (!isTransitioning) {
-      setImageLoading(true);
+      setImageLoading(isUserChange);
       setTimerProgress(0); // Reset progress for next story
     }
   }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser, prevUser, isTransitioning]);
@@ -181,7 +184,17 @@ const StoryViewer = (props: StoryViewerProps) => {
     }
 
     return () => clearInterval(interval);
-  }, [handleStoryAction, imageLoading, isPaused, timerProgress]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleStoryAction, imageLoading, isPaused]);
+
+  useEffect(() => {
+    const currImages = activeUser.data;
+    // Load next image beforehand for fast story viewing
+    const nextImg = new Image();
+    if (currStoryIdx < currImages.length - 1) {
+      nextImg.src = currImages[currStoryIdx + 1].image;
+    }
+  }, [activeUser.data, currStoryIdx, prevUser])
 
   const getTransformClass = () => {
     if (!isTransitioning || !slideDirection) return '';

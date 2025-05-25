@@ -51,7 +51,7 @@ function App() {
       {activeUserStoryIdx !== -1 && (
         <StoryViewer
           activeUser={userStories[activeUserStoryIdx]}
-          prevUser={activeUserStoryIdx > 0 ? userStories[activeUserStoryIdx-1] : null}
+          prevUser={activeUserStoryIdx > 0 ? userStories[activeUserStoryIdx - 1] : null}
           onNextUser={handleNextUser}
           onPrevUser={handlePrevUser}
           onClose={handleClose}
