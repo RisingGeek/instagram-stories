@@ -189,10 +189,10 @@ const StoryViewer = (props: StoryViewerProps) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black z-[1000] flex flex-col items-center justify-center">
-      <div 
+    <div className="fixed top-0 left-0 w-full h-full bg-black z-[1000] flex flex-col items-center justify-center" data-testid="story-viewer">
+      <div
         className={`relative w-full h-full max-w-[600px] transition-transform duration-300 ease-in-out ${getTransformClass()}`}
-        onMouseDown={handlePauseTimer} 
+        onMouseDown={handlePauseTimer}
         onMouseUp={handleResumeTimer}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -202,26 +202,32 @@ const StoryViewer = (props: StoryViewerProps) => {
             <div key={images.image} className='grow bg-white/30'>
               <div
                 style={{ width: index === currStoryIdx ? `${timerProgress}%` : index < currStoryIdx ? "100%" : '0' }}
-                className='h-full bg-white' />
+                className='h-full bg-white'
+                data-testid={`story-viewer-progress-${index}`}
+              />
             </div>
           ))}
         </div>
-        <div className='absolute top-[15px] left-[15px] flex items-center gap-2'>
+        <div className='absolute top-[15px] left-[15px] flex items-center gap-2 z-[1000]'>
           <img
             src={activeUser.profilePic}
             alt={activeUser.username}
             className='w-[40px] h-[40px] rounded-full'
           />
-          <span className='text-white font-bold'>{activeUser.username}</span>
+          <span className='text-white font-bold' data-testid="story-viewer-username">{activeUser.username}</span>
           <span className='text-white'>{formatTimeStamp(activeUser.data[currStoryIdx].timestamp)}</span>
         </div>
         <button
           type="button"
           className='absolute top-[15px] right-[15px] text-white text-3xl z-[1002]'
           onClick={onClose}
+          data-testid='close-story-viewer'
         >&times;</button>
         {imageLoading && (
-          <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
+          <div
+            className='absolute inset-0 flex items-center justify-center bg-black/50 z-[1002]'
+            data-testid='story-viewer-loader'
+          >
             <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
           </div>
         )}
@@ -229,17 +235,20 @@ const StoryViewer = (props: StoryViewerProps) => {
           src={activeUser.data[currStoryIdx].image}
           alt={`${activeUser.username}-${currStoryIdx}`}
           className={`w-full h-full object-cover ${imageLoading ? 'hidden' : 'block'}`}
+          data-testid='story-viewer-image'
           onLoad={() => setImageLoading(false)}
         />
         <button
           type='button'
           className='absolute top-0 bottom-0 w-1/2'
           onClick={() => handleStoryAction('prev')}
+          data-testid='story-viewer-nav-prev'
         />
         <button
           type='button'
           className='absolute top-0 bottom-0 right-0 w-1/2'
           onClick={() => handleStoryAction('next')}
+          data-testid='story-viewer-nav-next'
         />
 
       </div>
