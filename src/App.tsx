@@ -1,4 +1,4 @@
-import { act, use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import StoryList from "./modules/story-list/StoryList";
 import { UserStory } from "./types";
 import StoryViewer from "./modules/StoryViewer";
