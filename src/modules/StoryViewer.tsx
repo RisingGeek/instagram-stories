@@ -9,6 +9,7 @@ interface StoryViewerProps {
   onClose: () => void;
 }
 const HOLD_THRESHOLD = 500; // 500ms to trigger hold action
+const SWIPE_THRESHOLD = 100; // Minimum distance to trigger swipe
 
 const StoryViewer = (props: StoryViewerProps) => {
   const { activeUser, prevUser, onNextUser, onPrevUser, onClose } = props;
@@ -19,10 +20,13 @@ const StoryViewer = (props: StoryViewerProps) => {
   const [isTransitioning, setIsTransitioning] = React.useState<boolean>(false);
   const [slideDirection, setSlideDirection] = React.useState<'left' | 'right' | null>(null);
   const holdTriggeredRef = useRef<boolean>(false);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const swipeTriggeredRef = useRef<boolean>(false);
 
   const handleStoryAction = useCallback((direction: 'next' | 'prev') => {
-    if (holdTriggeredRef.current) {
+    if (holdTriggeredRef.current || swipeTriggeredRef.current) {
       holdTriggeredRef.current = false;
+      swipeTriggeredRef.current = false;
       return;
     }
     if (direction === 'next') {
@@ -63,6 +67,34 @@ const StoryViewer = (props: StoryViewerProps) => {
     }
   }, [activeUser.data.length, currStoryIdx, onNextUser, onPrevUser, prevUser, isTransitioning]);
 
+  const handleSwipeUser = (direction: 'left' | 'right') => {
+    if (direction === 'left') {
+      // Swipe left - go to next user
+      setSlideDirection('left');
+      setIsTransitioning(true);
+      setTimeout(() => {
+        onNextUser();
+        setCurrentStoryIdx(0);
+        setIsTransitioning(false);
+        setSlideDirection(null);
+      }, 300);
+    } else {
+      // Swipe right - go to previous user
+      setSlideDirection('right');
+      setIsTransitioning(true);
+      setTimeout(() => {
+        onPrevUser();
+        if (prevUser) {
+          setCurrentStoryIdx(prevUser.data.length - 1);
+        }
+        setIsTransitioning(false);
+        setSlideDirection(null);
+      }, 300);
+    }
+    setImageLoading(true);
+    setTimerProgress(0);
+  }
+
   const formatTimeStamp = (timestamp: string): string => {
     const now = Date.now();
     const diffMs = now - new Date(timestamp).getTime();
@@ -89,6 +121,45 @@ const StoryViewer = (props: StoryViewerProps) => {
     setIsPaused(false);
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY
+    };
+    swipeTriggeredRef.current = false;
+    handlePauseTimer();
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartRef.current) {
+      handleResumeTimer();
+      return;
+    }
+
+    const touchEnd = {
+      x: e.changedTouches[0].clientX,
+      y: e.changedTouches[0].clientY
+    };
+
+    const diffX = touchEnd.x - touchStartRef.current.x;
+    const diffY = touchEnd.y - touchStartRef.current.y;
+
+    // Check if it's a horizontal swipe (more horizontal than vertical movement)
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > SWIPE_THRESHOLD) {
+      swipeTriggeredRef.current = true;
+      if (diffX > 0) {
+        // Swipe right - go to previous user
+        handleSwipeUser('right');
+      } else {
+        // Swipe left - go to next user
+        handleSwipeUser('left');
+      }
+    }
+
+    touchStartRef.current = null;
+    handleResumeTimer();
+  };
+
   useEffect(() => {
     if (isPaused) {
       return;
@@ -110,7 +181,7 @@ const StoryViewer = (props: StoryViewerProps) => {
     }
 
     return () => clearInterval(interval);
-  }, [handleStoryAction, imageLoading, isPaused]);
+  }, [handleStoryAction, imageLoading, isPaused, timerProgress]);
 
   const getTransformClass = () => {
     if (!isTransitioning || !slideDirection) return '';
@@ -123,8 +194,8 @@ const StoryViewer = (props: StoryViewerProps) => {
         className={`relative w-full h-full max-w-[600px] transition-transform duration-300 ease-in-out ${getTransformClass()}`}
         onMouseDown={handlePauseTimer} 
         onMouseUp={handleResumeTimer}
-        onTouchStart={handlePauseTimer}
-        onTouchEnd={handleResumeTimer}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         <div className='absolute top-[5px] left-[15px] right-[15px] flex gap-1 h-[3px]'>
           {activeUser.data.map((images, index) => (
