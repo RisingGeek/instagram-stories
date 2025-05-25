@@ -9,7 +9,7 @@ function App() {
 
   useEffect(() => {
     const fetchStories = async () => {
-      const response = await fetch('/stories.json');
+      const response = await fetch('/instagram-stories/stories.json');
       const data: UserStory[] = await response.json();
       setUserStories(data);
     };
