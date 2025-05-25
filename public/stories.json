@@ -1,0 +1,74 @@
+[
+  {
+    "id": "user-1",
+    "username": "Ashley",
+    "profilePic": "https://i.pravatar.cc/150?u=user1",
+    "data": [
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story1/1080/1920" },
+      { "timestamp": "2025-05-24T15:27:19.191Z", "image": "https://picsum.photos/seed/story20/1080/1920" },
+      { "timestamp": "2025-05-24T16:27:19.191Z", "image": "https://picsum.photos/seed/story3/1080/1920" }
+    ]
+  },
+  {
+    "id": "user-2",
+    "username": "Elizabeth",
+    "profilePic": "https://i.pravatar.cc/150?u=user3",
+    "data": [
+      { "timestamp": "2025-05-24T15:30:19.191Z", "image": "https://picsum.photos/seed/story4/1080/1920" },
+      { "timestamp": "2025-05-24T15:30:19.191Z", "image": "https://picsum.photos/seed/story6/1080/1920" }
+    ]
+  },
+  {
+    "id": "user-3",
+    "username": "Drake",
+    "profilePic": "https://i.pravatar.cc/150?u=user4",
+    "data": [
+      { "timestamp": "2025-05-24T01:24:19.191Z", "image": "https://picsum.photos/seed/story7/1080/1920" },
+      { "timestamp": "2025-05-24T02:24:19.191Z", "image": "https://picsum.photos/seed/story8/1080/1920" },
+      { "timestamp": "2025-05-24T02:24:19.191Z", "image": "https://picsum.photos/seed/story9/1080/1920" }
+    ]
+  },
+  {
+    "id": "user-4",
+    "username": "Arijit",
+    "profilePic": "https://i.pravatar.cc/150?u=user7",
+    "data": [
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story10/1080/1920" },
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story12/1080/1920" }
+    ]
+  },
+  {
+    "id": "user-5",
+    "username": "Nishant",
+    "profilePic": "https://i.pravatar.cc/150?u=user8",
+    "data": [
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story13/1080/1920" }
+    ]
+  },
+  {
+    "id": "user-6",
+    "username": "Ayesha",
+    "profilePic": "https://i.pravatar.cc/150?u=user9",
+    "data": [
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story14/1080/1920" }
+    ]
+  },
+  {
+    "id": "user-7",
+    "username": "Janhvi",
+    "profilePic": "https://i.pravatar.cc/150?u=user10",
+    "data": [
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story15/1080/1920" },
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story16/1080/1920" }
+    ]
+  },
+  {
+    "id": "user-8",
+    "username": "Simran",
+    "profilePic": "https://i.pravatar.cc/150?u=user11",
+    "data": [
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story17/1080/1920" },
+      { "timestamp": "2025-05-24T14:27:19.191Z", "image": "https://picsum.photos/seed/story18/1080/1920" }
+    ]
+  }
+]
